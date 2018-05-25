@@ -5,7 +5,7 @@ const api = require('./api/restRouter');
 var { mongoose } = require('./db/mongoose');
 const { protect, signIn, register } = require('./api/auth/auth');
 
-setupMiddlware(app);
+setupMiddlware(app,express);
 
 app.use('/api',protect, api)
 app.use('/token', signIn);

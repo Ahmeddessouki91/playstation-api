@@ -2,22 +2,25 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var TimeSchema = new Schema({
-    device: {
+    game: {
         type: Schema.Types.ObjectId,
-        ref: 'device'
+        ref: 'game'
     },
-    user: {
-        type: Schema.Types.ObjectId,
-        ref: 'user'
+    isLimited: {
+        type: Boolean,
+        required: true
     },
-    start: {
+	price:{
+		type:Number,
+		required:true
+	},
+    startTime: {
         type: Date,
         required: true,
         default: Date.now
     },
-    end: {
+    endTime: {
         type: Date,
-        required: true
     }
 });
 

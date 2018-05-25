@@ -1,7 +1,7 @@
 const Category = require('./categoryModel');
 const _ = require('lodash');
 
-exports.findByParam = (req, res, next) => {
+exports.findByParam = (req, res, next,id) => {
     Category.findById(id).then(function (category) {
         if (!category) {
             next(new Error('No post with that id'));

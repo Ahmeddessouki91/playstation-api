@@ -1,8 +1,8 @@
 const Game = require('./gameModel');
 const _ = require('lodash');
 
-exports.findByParam = (req, res, next) => {
-    Game.findById(id).populate('categories')
+exports.findByParam = (req, res, next,id) => {
+    Game.findById(id).populate('category')
     .exec().then(function (game) {
         if (!game) {
             next(new Error('No post with that id'));
@@ -16,7 +16,7 @@ exports.findByParam = (req, res, next) => {
 }
 
 exports.get = (req, res, next) => {
-    Game.find().populate('categories')
+    Game.find().populate('category')
     .exec().then((result) => {
         res.send(result);
     }).catch((e) => {
@@ -46,7 +46,7 @@ exports.put = (req, res, next) => {
 
     _.merge(game, update);
 
-    Game.save(function (err, saved) {
+    game.save(function (err, saved) {
         if (err) {
             next(err);
         } else {
