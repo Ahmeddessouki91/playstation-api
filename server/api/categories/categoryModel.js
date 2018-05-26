@@ -7,10 +7,14 @@ var CategorySchema = new Schema({
         unique: true,
         required: true
     },
-    image: {
-        type: String,
-        required: true
-    }
+    multi_price:{
+		type:Number,
+		required:true
+    },
+    single_price:{
+		type:Number,
+		required:true
+	}
 });
 
 module.exports = mongoose.model('category', CategorySchema);

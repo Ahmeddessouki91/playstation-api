@@ -10,10 +10,10 @@ var TimeSchema = new Schema({
         type: Boolean,
         required: true
     },
-	price:{
-		type:Number,
-		required:true
-	},
+    isMulti: {
+        type: Boolean,
+        default: false
+    },
     startTime: {
         type: Date,
         required: true,
