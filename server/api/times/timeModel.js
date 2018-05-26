@@ -20,8 +20,12 @@ var TimeSchema = new Schema({
         default: Date.now
     },
     endTime: {
-        type: Date,
-    }
+        type: Date
+    },
+    isCheckout: {
+        type: Boolean,
+        default: false
+    },
 });
 
 module.exports = mongoose.model('time', TimeSchema);

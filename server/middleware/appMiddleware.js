@@ -7,7 +7,6 @@ const path = require('path');
 const dir = path.join(__dirname, '../public');
 	
 module.exports = (app,express) => {
-	console.log(dir);
     app.use(cors());
 	app.use(express.static(dir));
     app.use(morgan('dev'));

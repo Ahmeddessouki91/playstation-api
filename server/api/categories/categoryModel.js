@@ -7,11 +7,11 @@ var CategorySchema = new Schema({
         unique: true,
         required: true
     },
-    multi_price:{
+    multiPrice:{
 		type:Number,
 		required:true
     },
-    single_price:{
+    singlePrice:{
 		type:Number,
 		required:true
 	}

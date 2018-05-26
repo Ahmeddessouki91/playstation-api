@@ -9,7 +9,7 @@ var GameSchema = new Schema({
     },
     avaliable: {
         type: Boolean,
-        default: false
+        default: true
     },
     category: {
         type: Schema.Types.ObjectId,
