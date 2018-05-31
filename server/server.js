@@ -2,12 +2,12 @@ const express = require('express');
 const app = express();
 const setupMiddlware = require('./middleware/appMiddleware');
 const api = require('./api/restRouter');
-var { mongoose } = require('./db/mongoose');
+var { initDB, mongoose } = require('./db/mongoose');
 const { protect, signIn, register } = require('./api/auth/auth');
 
-setupMiddlware(app,express);
-
-app.use('/api',protect, api)
+initDB();
+setupMiddlware(app, express);
+app.use('/api', protect, api)
 app.use('/token', signIn);
 app.use('/register', register);
 

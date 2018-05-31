@@ -17,6 +17,10 @@ var UserSchema = new Schema({
     password: {
         type: String,
         required: true
+    },
+    isAdmin: {
+        type: Boolean,
+        default: false
     }
 });
 
@@ -31,21 +35,24 @@ UserSchema.methods.generateAuthToken = function () {
     var user = this;
 
     var access = "Bearer";
-    var token = jwt.sign({ _id: user._id, access }, config.secrets.jwt
+    var token = jwt.sign({ _id: user._id, access, isAdmin: user.isAdmin }, config.secrets.jwt
         , { expiresIn: config.expireTime });
-    // user.tokens.push({ access, token });
-
-    // return user.save().then(() => {
-    //     return token;
-    // });
-
     return token;
 };
+
+UserSchema.methods.encryptPassword = function (plainTextPword) {
+    if (!plainTextPword) {
+        return '';
+    } else {
+        const salt = bycrypt.genSaltSync(10);
+        return bycrypt.hashSync(plainTextPword, salt);
+    }
+}
 
 UserSchema.statics.findByCredentials = function (username, password) {
     var User = this;
     return User.findOne({ username: username }).then((user) => {
-        
+
         if (!user)
             return Promise.reject();
 
@@ -61,18 +68,9 @@ UserSchema.statics.findByCredentials = function (username, password) {
 }
 
 UserSchema.pre('save', function (next) {
-    var user = this;
-
-    if (user.isModified('password')) {
-        bycrypt.genSalt(10, (err, salt) => {
-            bycrypt.hash(user.password, salt, (err, hash) => {
-                user.password = hash;
-                next();
-            });
-        })
-    } else {
-        next();
-    }
+    if (!this.isModified('password')) return next();
+    this.password = this.encryptPassword(this.password);
+    next();
 });
 
 module.exports = mongoose.model('user', UserSchema);

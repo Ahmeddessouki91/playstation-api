@@ -19,13 +19,30 @@ var TimeSchema = new Schema({
         required: true,
         default: Date.now
     },
-    endTime: {
-        type: Date
-    },
     isCheckout: {
         type: Boolean,
         default: false
     },
+    isPause: {
+        type: Boolean,
+        default: false
+    },
+    usedTime: {
+        type: Number,
+        default: 0
+    },
+    limitedTime: {
+        type: Number,
+        default: 0
+    },
+	isFinish:{
+		 type: Boolean,
+        default: false
+	},
+    totalPrice: {
+        type: Number,
+        default: 0
+    }
 });
 
 module.exports = mongoose.model('time', TimeSchema);

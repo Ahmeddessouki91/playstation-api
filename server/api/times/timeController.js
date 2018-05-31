@@ -16,7 +16,7 @@ exports.findByParam = (req, res, next,id) => {
 }
 
 exports.get = (req, res, next) => {
-    Time.find().populate('game')
+    Time.find().populate({path:'game',populate:{path:'category'}})
     .exec().then((result) => {
         res.send(result);
     }).catch((e) => {
@@ -44,7 +44,7 @@ exports.put = (req, res, next) => {
 
     const update = req.body;
 
-    _.merge(time, update);
+    time = _.merge(time, update);
 
     time.save(function (err, saved) {
         if (err) {
