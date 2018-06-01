@@ -1,27 +1,36 @@
 const Time = require('./timeModel');
 const _ = require('lodash');
+const moment = require('moment');
 
-exports.findByParam = (req, res, next,id) => {
+exports.findByParam = (req, res, next, id) => {
     Time.findById(id).populate('game')
-    .exec().then(function (time) {
-        if (!time) {
-            next(new Error('No post with that id'));
-        } else {
-            req.time = time;
-            next();
-        }
-    }, function (err) {
-        next(err);
-    });
+        .exec().then(function (time) {
+            if (!time) {
+                next(new Error('No post with that id'));
+            } else {
+                req.time = time;
+                next();
+            }
+        }, function (err) {
+            next(err);
+        });
 }
 
 exports.get = (req, res, next) => {
-    Time.find().populate({path:'game',populate:{path:'category'}})
-    .exec().then((result) => {
-        res.send(result);
-    }).catch((e) => {
-        res.status(400).send();
-    })
+    let filter = req.query.filter;
+
+    var query = {};
+    if (filter) {
+        var start = moment().startOf(filter);
+        var end = moment().endOf(filter);
+        query = { startTime: { $gte: start, $lt: end }, isCheckout: false };
+    }
+    Time.find(query).populate({ path: 'game', populate: { path: 'category' } })
+        .exec().then((result) => {
+            res.send(result);
+        }).catch((e) => {
+            res.status(400).send();
+        });
 }
 
 exports.getOne = (req, res, next) => {

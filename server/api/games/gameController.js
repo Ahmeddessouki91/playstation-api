@@ -1,27 +1,33 @@
 const Game = require('./gameModel');
 const _ = require('lodash');
 
-exports.findByParam = (req, res, next,id) => {
+exports.findByParam = (req, res, next, id) => {
     Game.findById(id).populate('category')
-    .exec().then(function (game) {
-        if (!game) {
-            next(new Error('No post with that id'));
-        } else {
-            req.game = game;
-            next();
-        }
-    }, function (err) {
-        next(err);
-    });
+        .exec().then(function (game) {
+            if (!game) {
+                next(new Error('No post with that id'));
+            } else {
+                req.game = game;
+                next();
+            }
+        }, function (err) {
+            next(err);
+        });
 }
 
 exports.get = (req, res, next) => {
-    Game.find().populate('category')
-    .exec().then((result) => {
-        res.send(result);
-    }).catch((e) => {
-        res.status(400).send();
-    })
+    let category = req.query.category;
+
+    var query = {};
+    if (category)
+        query = { category: category };
+        
+    Game.find(query).populate('category')
+        .exec().then((result) => {
+            res.send(result);
+        }).catch((e) => {
+            res.status(400).send();
+        })
 }
 
 exports.getOne = (req, res, next) => {

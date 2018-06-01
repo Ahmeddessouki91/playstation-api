@@ -62,7 +62,7 @@ const signIn = (req, res, next) => {
 
     User.findByCredentials(body.username, body.password).then((user) => {
         var token = user.generateAuthToken();
-        res.json({ token, username: user.username });
+        res.json({ token, username: user.username, isAdmin: user.isAdmin });
     }).catch((e) => {
         res.status(400).send("Invalid username or password!");
     });
