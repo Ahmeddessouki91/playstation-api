@@ -23,7 +23,7 @@ exports.get = (req, res, next) => {
     if (filter) {
         var start = moment().startOf(filter);
         var end = moment().endOf(filter);
-        query = { startTime: { $gte: start, $lt: end }, isCheckout: false };
+        query = { startTime: { $gte: start, $lt: end }};
     }
     Time.find(query).populate({ path: 'game', populate: { path: 'category' } })
         .exec().then((result) => {
