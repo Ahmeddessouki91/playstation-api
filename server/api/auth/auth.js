@@ -2,7 +2,6 @@ const config = require('./../../config/config')
 const User = require('./../users/userModel');
 
 const expressJwt = require('express-jwt');
-const jwt = require('jsonwebtoken');
 
 const _ = require('lodash');
 const checkToken = expressJwt({ secret: config.secrets.jwt });

@@ -21,7 +21,7 @@ exports.get = (req, res, next) => {
     var query = {};
     if (category)
         query = { category: category };
-        
+
     Game.find(query).populate('category')
         .exec().then((result) => {
             res.send(result);
@@ -71,3 +71,21 @@ exports.delete = function (req, res, next) {
     });
 };
 
+exports.getFreePlaces = function (req, res, next) {
+    getFreeGames(req, res, next);
+}
+
+async function getFreeGames(req, res, next) {
+    try {
+        const games = await Game.find({ avaliable: true }).populate('category');
+        const filter =
+            _.chain(games)
+                .groupBy('category.name')
+                .map((value, key) => {
+                    return { category: key, count: value.length }
+                }).value()
+        res.status(200).json(filter);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+}

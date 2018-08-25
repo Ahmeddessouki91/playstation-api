@@ -6,7 +6,7 @@ exports.findByParam = (req, res, next,id) => {
         if (!user) {
             next(new Error('No Users with that id'));
         } else {
-            req.time = time;
+            req.user = user;
             next();
         }
     }, function (err) {
@@ -16,7 +16,7 @@ exports.findByParam = (req, res, next,id) => {
 
 exports.get = (req, res, next) => {
     User.find().then((result) => {
-        res.send(result);
+		res.json(result);
     }).catch((e) => {
         res.status(400).send();
     })

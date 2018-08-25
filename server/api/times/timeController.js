@@ -1,4 +1,5 @@
 const Time = require('./timeModel');
+const Game = require('../games/gameModel');
 const _ = require('lodash');
 const moment = require('moment');
 
@@ -23,7 +24,7 @@ exports.get = (req, res, next) => {
     if (filter) {
         var start = moment().startOf(filter);
         var end = moment().endOf(filter);
-        query = { startTime: { $gte: start, $lt: end }};
+        query = { startTime: { $gte: start, $lt: end } };
     }
     Time.find(query).populate({ path: 'game', populate: { path: 'category' } })
         .exec().then((result) => {
@@ -39,26 +40,33 @@ exports.getOne = (req, res, next) => {
 }
 
 exports.post = (req, res, next) => {
-    let body = req.body;
-    let time = new Time(body);
-    time.save().then((doc) => {
-        res.status(200).json(doc);
-    }).catch((e) => {
-        res.status(400).send(e);
-    })
+    // let body = req.body;
+    // let time = new Time(body);
+    // time.save().then((doc) => {
+    //     res.status(200).json(doc);
+    // }).catch((e) => {
+    //     res.status(400).send(e);
+    // })
+    PostTime(req, res, next);
 }
 
 exports.put = (req, res, next) => {
+    const update = req.body;
     let time = req.time;
 
-    const update = req.body;
-
     time = _.merge(time, update);
-
     time.save(function (err, saved) {
         if (err) {
             next(err);
         } else {
+            Game.findById(time.game._id, (err, game) => {
+                if (err)
+                    next(err);
+                else {
+                    game = _.merge(game, req.time.game);
+                    game.save();
+                }
+            })
             res.json(saved);
         }
     })
@@ -74,3 +82,17 @@ exports.delete = function (req, res, next) {
     });
 };
 
+async function PostTime(req, res, next) {
+    try {
+        let newTime = new Time(req.body);
+        let timeDB = await newTime.save();
+
+        let game = await Game.findById(req.body.game._id);
+        _.merge(game, req.body.game);
+        await game.save();
+
+        res.status(200).json(timeDB);
+    } catch (error) {
+        res.status(400).send(error);
+    }
+}
